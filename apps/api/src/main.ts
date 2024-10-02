@@ -5,15 +5,26 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from "@nestjs/swagger";
-import { VersioningType } from "@nestjs/common";
+import { Logger as PinoLogger, LoggerErrorInterceptor } from "nestjs-pino";
+import helmet from "helmet";
+import compression from "compression";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  app.enableVersioning({
-    defaultVersion: "1",
-    type: VersioningType.URI,
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
   });
+  app.useLogger(app.get(PinoLogger));
+
+  app.use(helmet());
+  app.use(compression());
+  app.enableVersioning();
+
+  app.useGlobalInterceptors(new LoggerErrorInterceptor());
+
+  // Reference: https://github.dev/Ferdysd96/nestjs-permission-boilerplate
+  // app.useGlobalFilters(new HttpExceptionFilter());
+  // app.useGlobalInterceptors(new HttpResponseInterceptor());
+  // app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
     .setTitle("Cats example")
@@ -31,4 +42,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
+
 bootstrap();

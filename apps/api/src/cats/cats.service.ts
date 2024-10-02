@@ -1,26 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { CreateCatDto } from "./dto/create-cat.dto";
-import { UpdateCatDto } from "./dto/update-cat.dto";
+import { Injectable, Logger } from "@nestjs/common";
+import { Cat } from "@/cats/entities/cat.entity";
+import { CreateCatDto } from "@/cats/dto/create-cat.dto";
 
 @Injectable()
 export class CatsService {
-  create(createCatDto: CreateCatDto) {
-    return "This action adds a new cat";
+  private readonly logger = new Logger(CatsService.name);
+
+  private readonly cats: Cat[] = [];
+
+  create(dto: CreateCatDto) {
+    this.cats.push(Cat.from(dto));
   }
 
   findAll() {
-    return `This action returns all cats`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} cat`;
-  }
-
-  update(id: number, updateCatDto: UpdateCatDto) {
-    return `This action updates a #${id} cat`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cat`;
+    return this.cats;
   }
 }
