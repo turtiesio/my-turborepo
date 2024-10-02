@@ -4,9 +4,10 @@ import { LinksModule } from "@/links/links.module";
 
 import { AppController } from "@/app.controller";
 import { AppService } from "@/app.service";
+import { CatsModule } from "./cats/cats.module";
 
 @Module({
-  imports: [LinksModule],
+  imports: [LinksModule, CatsModule],
   controllers: [AppController],
   providers: [AppService],
 })
