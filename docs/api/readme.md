@@ -20,3 +20,12 @@ export class MyService {
   }
 }
 ```
+
+## Considerations
+
+- [ ] Use `ulid` instead of `uuid`
+  - Sortable
+  - 26 characters
+- [ ] Timezone
+  - Use `timestamp with time zone` instead of `timestamp`
+- [ ] Use `ulid` instead of `uuid`

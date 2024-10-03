@@ -1,14 +1,28 @@
 import { LoggerModule } from "nestjs-pino";
 import { Module } from "@nestjs/common";
-import { LinksModule } from "@/links/links.module";
 import { AppController } from "@/app.controller";
 import { AppService } from "@/app.service";
 import { CatsModule } from "@/cats/cats.module";
-import { ulid } from "ulid";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { UserModule } from "./user/user.module";
+import { User } from "@/user/entities/user.entity";
+import { ulid } from "ulidx";
 
 @Module({
   imports: [
-    LinksModule,
+    TypeOrmModule.forRoot({
+      type: "postgres",
+      host: "localhost",
+      port: 5432,
+      username: "postgres",
+      password: "postgres",
+      database: "postgres",
+      entities: [User],
+      synchronize: process.env.NODE_ENV !== "production",
+      // entities: [__dirname + "/**/*.entity{.ts,.js}"],
+      autoLoadEntities: true,
+    }),
+    UserModule,
     CatsModule,
     LoggerModule.forRoot({
       pinoHttp: {
@@ -19,7 +33,6 @@ import { ulid } from "ulid";
             : undefined,
         quietReqLogger: true,
         quietResLogger: true,
-        //
         // TODO: implement reqId from client side. Extract from headers. e.g. X-Request-ID
         genReqId: () => ulid(),
       },
