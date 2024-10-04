@@ -11,8 +11,6 @@ import compression from "compression";
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import { ConfigService } from "@nestjs/config";
-import { AllConfigType } from "@/config/config.type";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

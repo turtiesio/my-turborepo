@@ -5,19 +5,18 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 
 @Injectable()
 export class DatabaseConfigService implements TypeOrmOptionsFactory {
-  constructor(private configService: ConfigService<AllConfigType>) {}
+  constructor(private readonly configService: ConfigService<AllConfigType>) {}
 
   createTypeOrmOptions(
     connectionName?: string,
   ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions {
     return {
       type: "postgres",
-      url: this.configService.getOrThrow("database.url", { infer: true }),
+      url: this.configService.getOrThrow("app.databaseUrl", { infer: true }),
       entities: [__dirname + "/**/*.entity{.ts,.js}"],
       synchronize:
-        this.configService.getOrThrow("app.nodeEnv", {
-          infer: true,
-        }) !== "production",
+        this.configService.getOrThrow("app.nodeEnv", { infer: true }) !==
+        "production",
     };
   }
 }

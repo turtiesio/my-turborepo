@@ -1,7 +1,5 @@
-import { AppConfig } from "@/config/app.config.type";
-import { DatabaseConfig } from "@/database/config/database.config.type";
+import { AppConfig } from "@/config/app.config";
 
 export type AllConfigType = {
   app: AppConfig;
-  database: DatabaseConfig;
 };

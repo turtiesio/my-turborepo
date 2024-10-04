@@ -5,20 +5,19 @@ import { UserModule } from "./user/user.module";
 import { ulid } from "ulidx";
 import { ConfigModule } from "@nestjs/config";
 import appConfig from "@/config/app.config";
-import databaseConfig from "@/database/config/database.config";
 import { DatabaseConfigService } from "@/database/database.config.service";
+import { AuthGoogleModule } from "./auth-google/auth-google.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig],
       envFilePath: [process.cwd() + "/../../.env"],
     }),
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConfigService,
     }),
-    UserModule,
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.NODE_ENV !== "production" ? "debug" : "info",
@@ -32,6 +31,8 @@ import { DatabaseConfigService } from "@/database/database.config.service";
         genReqId: () => ulid(),
       },
     }),
+    UserModule,
+    AuthGoogleModule,
   ],
 })
 export class AppModule {}
