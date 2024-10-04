@@ -1,4 +1,3 @@
-import { generateId } from "@/utils/id";
 import { validateOrReject } from "class-validator";
 import {
   BeforeInsert,
@@ -8,19 +7,60 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-export class EntityBase {
-  @PrimaryColumn({ type: "varchar", length: 26, comment: "ULID User ID" })
-  id: string;
+// Schame variable should start with underscore
+// Because when typeorm repository takes the schema,
+// it accepts as DeepPartial.
 
-  @CreateDateColumn({ type: "timestamp with time zone" })
-  createdAt: Date;
+// Which means it can take any property of the schema.
+// And also with same variable name in other classes.
+// Which can cause very hard to debug issues.
 
-  @UpdateDateColumn({ type: "timestamp with time zone" })
-  updatedAt: Date;
+function EnforceUnderscorePrefix() {
+  return function (constructor: Function) {
+    const propertyNames = Object.getOwnPropertyNames(constructor.prototype);
+
+    for (const name of propertyNames) {
+      if (
+        name === "constructor" ||
+        typeof constructor.prototype[name] === "function"
+      ) {
+        continue;
+      }
+
+      if (!name.startsWith("_")) {
+        throw new Error(`Property "${name}" must start with an underscore.`);
+      }
+    }
+  };
+}
+
+@EnforceUnderscorePrefix()
+export class SchemaBase {
+  @PrimaryColumn({
+    name: "id",
+    type: "varchar",
+    length: 26,
+    comment: "ULID User ID",
+  })
+  _id: string;
+
+  @CreateDateColumn({ name: "created_at", type: "timestamp with time zone" })
+  _createdAt: Date;
+
+  @UpdateDateColumn({ name: "updated_at", type: "timestamp with time zone" })
+  _updatedAt: Date;
+
+  //
 
   @BeforeInsert()
   @BeforeUpdate()
-  async validate() {
+  protected async validate() {
     await validateOrReject(this);
   }
 }
+
+export abstract class EntityBase<T extends SchemaBase> {
+  abstract toSchema(): Readonly<T>;
+}
+
+export abstract class BaseDto<T> {}

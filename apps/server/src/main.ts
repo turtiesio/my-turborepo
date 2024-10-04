@@ -11,12 +11,17 @@ import compression from "compression";
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import { ConfigService } from "@nestjs/config";
+import { AllConfigType } from "@/config/config.type";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
   app.useLogger(app.get(PinoLogger));
+
+  // const configService = app.get(ConfigService<AllConfigType>);
+  // console.log(configService.get("app.apiPrefix", { infer: true }));
 
   app.use(helmet());
   app.use(compression());

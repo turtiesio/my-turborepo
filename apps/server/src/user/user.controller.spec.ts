@@ -1,4 +1,4 @@
-import { User } from "@/user/entities/user.entity";
+import { UserSchema } from "@/user/entities/user.entity";
 import { UserController } from "@/user/user.controller";
 import { UserService } from "@/user/user.service";
 import { Test, TestingModule } from "@nestjs/testing";
@@ -13,7 +13,7 @@ describe("UserController", () => {
       providers: [
         UserService,
         {
-          provide: getRepositoryToken(User),
+          provide: getRepositoryToken(UserSchema),
           useValue: {
             save: jest.fn(),
           },

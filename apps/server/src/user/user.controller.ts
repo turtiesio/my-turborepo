@@ -1,28 +1,12 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Req,
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Param } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { ApiResponse, ApiOperation } from "@nestjs/swagger";
+import { ApiResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("User")
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  // @Get("me")
-  // @ApiOperation({ summary: "Get the current user" })
-  // @ApiResponse({ status: 200, description: "User fetched successfully" })
-  // me(@Req() req: Request) {
-  //   return this.userService.me(req.cookies[APP_COOKIE.SESSION]);
-  // }
 
   @Post()
   @ApiOperation({ summary: "Create a new user" })
@@ -43,19 +27,5 @@ export class UserController {
   @ApiResponse({ status: 200, description: "User fetched successfully" })
   findOne(@Param("id") id: string) {
     return this.userService.findOne(id);
-  }
-
-  @Patch(":id")
-  @ApiOperation({ summary: "Update a user by ID" })
-  @ApiResponse({ status: 200, description: "User updated successfully" })
-  update(@Param("id") id: string, @Body() dto: UpdateUserDto) {
-    return this.userService.update(id, dto);
-  }
-
-  @Delete(":id")
-  @ApiOperation({ summary: "Delete a user by ID" })
-  @ApiResponse({ status: 200, description: "User deleted successfully" })
-  remove(@Param("id") id: string) {
-    return this.userService.remove(id);
   }
 }
