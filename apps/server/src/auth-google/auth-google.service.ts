@@ -1,4 +1,5 @@
 import { AuthGoogleLoginDto } from "@/auth-google/dto/auth-google-login.dto";
+import { AuthOAuthResponse } from "@/auth/interface/auth-oauth-response.interface";
 import { AllConfigType } from "@/config/config.type";
 
 import { Injectable, UnprocessableEntityException } from "@nestjs/common";
@@ -16,10 +17,12 @@ export class AuthGoogleService {
     );
   }
 
-  async verify(dto: AuthGoogleLoginDto) {
+  async validate(dto: AuthGoogleLoginDto): Promise<AuthOAuthResponse> {
     const ticket = await this.google.verifyIdToken({
       idToken: dto.idToken,
-      audience: this.configService.getOrThrow("app.apiPrefix", { infer: true }),
+      audience: this.configService.getOrThrow("app.googleClientId", {
+        infer: true,
+      }),
     });
 
     const data = ticket.getPayload();
@@ -28,8 +31,11 @@ export class AuthGoogleService {
       throw new UnprocessableEntityException("Invalid token");
     }
 
-    // const user = await this.userService.findByEmail(data.email);
-
-    return data;
+    return {
+      id: data.sub,
+      name: data.name ?? data.given_name ?? data.family_name ?? "",
+      email: data.email,
+      picture: data.picture,
+    };
   }
 }

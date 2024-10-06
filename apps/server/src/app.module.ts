@@ -7,6 +7,9 @@ import { ConfigModule } from "@nestjs/config";
 import appConfig from "@/config/app.config";
 import { DatabaseConfigService } from "@/database/database.config.service";
 import { AuthGoogleModule } from "./auth-google/auth-google.module";
+import { UserOauthService } from "./user-oauth/user-oauth.service";
+import { UserOauthModule } from "./user-oauth/user-oauth.module";
+import { AuthModule } from "@/auth/auth.module";
 
 @Module({
   imports: [
@@ -31,8 +34,10 @@ import { AuthGoogleModule } from "./auth-google/auth-google.module";
         genReqId: () => ulid(),
       },
     }),
+    AuthModule,
     UserModule,
     AuthGoogleModule,
+    UserOauthModule,
   ],
 })
 export class AppModule {}

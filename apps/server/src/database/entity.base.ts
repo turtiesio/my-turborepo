@@ -35,12 +35,12 @@ function EnforceUnderscorePrefix() {
 }
 
 @EnforceUnderscorePrefix()
-export class SchemaBase {
+export class EntityBase {
   @PrimaryColumn({
     name: "id",
     type: "varchar",
     length: 26,
-    comment: "ULID User ID",
+    comment: "ULID ID",
   })
   _id: string;
 
@@ -59,7 +59,7 @@ export class SchemaBase {
   }
 }
 
-export abstract class EntityBase<T extends SchemaBase> {
+export abstract class DomainBase<T extends EntityBase> {
   abstract toSchema(): Readonly<T>;
 }
 

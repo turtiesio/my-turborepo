@@ -1,4 +1,4 @@
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import {
   DocumentBuilder,
@@ -8,7 +8,11 @@ import {
 import { Logger as PinoLogger, LoggerErrorInterceptor } from "nestjs-pino";
 import helmet from "helmet";
 import compression from "compression";
-import { ValidationPipe, VersioningType } from "@nestjs/common";
+import {
+  ClassSerializerInterceptor,
+  ValidationPipe,
+  VersioningType,
+} from "@nestjs/common";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 
@@ -36,7 +40,10 @@ async function bootstrap() {
     defaultVersion: "1",
   });
 
-  app.useGlobalInterceptors(new LoggerErrorInterceptor());
+  app.useGlobalInterceptors(
+    new LoggerErrorInterceptor(),
+    new ClassSerializerInterceptor(app.get(Reflector)),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

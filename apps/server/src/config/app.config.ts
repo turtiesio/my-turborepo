@@ -8,6 +8,7 @@ import {
   IsUrl,
   Max,
   Min,
+  NotEquals,
 } from "class-validator";
 
 enum Environment {
@@ -52,35 +53,54 @@ class EnvironmentVariablesValidator {
   APP_HEADER_LANGUAGE: string = "x-custom-lang";
 
   // Google
+
   @IsString()
-  @IsOptional()
   GOOGLE_CLIENT_ID: string;
 
   @IsString()
-  @IsOptional()
   GOOGLE_CLIENT_SECRET: string;
 
   // Database
+
   @IsString()
-  @IsOptional()
   DATABASE_URL: string;
+
+  // JWT
+
+  @IsString()
+  @NotEquals("REPLACE_THIS")
+  JWT_SECRET: string;
+
+  @IsInt()
+  JWT_ACCESS_EXPIRES_IN: number;
+
+  @IsInt()
+  JWT_REFRESH_EXPIRES_IN: number;
 }
 
 export type AppConfig = {
   nodeEnv: Environment;
+
   appName: string;
-  pwd: string;
-  domainFront: string;
-  domainBack: string;
   appPort: number;
   apiPrefix: string;
+
+  domainFront: string;
+  domainBack: string;
+
   fallbackLanguage: string;
   headerLanguage: string;
+
+  pwd: string;
 
   googleClientId: string;
   googleClientSecret: string;
 
   databaseUrl: string;
+
+  jwtSecret: string;
+  jwtAccessExpiresIn: number;
+  jwtRefreshExpiresIn: number;
 };
 
 export default registerAs<AppConfig>("app", () => {
@@ -106,5 +126,9 @@ export default registerAs<AppConfig>("app", () => {
     googleClientSecret: config.GOOGLE_CLIENT_SECRET,
 
     databaseUrl: config.DATABASE_URL,
+
+    jwtSecret: config.JWT_SECRET,
+    jwtAccessExpiresIn: config.JWT_ACCESS_EXPIRES_IN,
+    jwtRefreshExpiresIn: config.JWT_REFRESH_EXPIRES_IN,
   };
 });

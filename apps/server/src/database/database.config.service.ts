@@ -13,7 +13,7 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
     return {
       type: "postgres",
       url: this.configService.getOrThrow("app.databaseUrl", { infer: true }),
-      entities: [__dirname + "/**/*.entity{.ts,.js}"],
+      entities: [__dirname + "./../**/*.entity{.ts,.js}"],
       synchronize:
         this.configService.getOrThrow("app.nodeEnv", { infer: true }) !==
         "production",

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { UserService } from "./user.service";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { UserSchema } from "@/user/entities/user.entity";
+import { UserEntity } from "@/user/entities/user.entity";
 
 describe("UserService", () => {
   let service: UserService;
@@ -11,7 +11,7 @@ describe("UserService", () => {
       providers: [
         UserService,
         {
-          provide: getRepositoryToken(UserSchema),
+          provide: getRepositoryToken(UserEntity),
           useValue: {
             save: jest.fn(),
           },

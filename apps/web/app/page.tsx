@@ -8,6 +8,7 @@ import { Code } from "@repo/ui/code";
 import { Button } from "@repo/ui/button";
 
 import styles from "./page.module.css";
+import GoogleAuth from "./googleAuth";
 
 const Gradient = ({
   conic,
@@ -33,15 +34,17 @@ const Gradient = ({
 };
 
 const LinksSection = async () => {
-  const fetchLinks = async (): Promise<Link[]> => {
-    try {
-      return await (await fetch("http://localhost:3000/links")).json();
-    } catch (_) {
-      return [];
-    }
-  };
+  // const fetchLinks = async (): Promise<Link[]> => {
+  //   try {
+  //     return await (await fetch("http://localhost:3000/links")).json();
+  //   } catch (_) {
+  //     return [];
+  //   }
+  // };
 
-  const links = await fetchLinks();
+  // const links = await fetchLinks();
+
+  const links: Link[] = [];
 
   return (
     <div className={styles.grid}>
@@ -157,6 +160,8 @@ const RootPage = ({ params }: { params: { forTest?: boolean } }) => {
       ) : (
         <Suspense fallback={"Loading links..."}>{<LinksSection />}</Suspense>
       )}
+
+      <GoogleAuth />
     </main>
   );
 };
